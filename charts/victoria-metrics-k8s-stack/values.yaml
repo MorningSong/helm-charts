@@ -1010,7 +1010,7 @@ kubelet:
   vmScrapes:
     # -- Enable scraping /metrics/cadvisor from kubelet's service
     cadvisor:
-      enabled: true
+      enabled: false
       spec:
         path: /metrics/cadvisor
     # -- Enable scraping /metrics/probes from kubelet's service

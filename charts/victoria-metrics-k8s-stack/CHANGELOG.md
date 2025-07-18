@@ -1,6 +1,6 @@
 ## Next release
 
-- TODO
+- Disabled scraping from deprecated /metrics/cadvisor endpoint by default. See [#2315](https://github.com/VictoriaMetrics/helm-charts/issues/2315).
 
 ## 0.57.0
 
