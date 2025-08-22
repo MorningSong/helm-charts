@@ -39,6 +39,11 @@ metadata:
   {{- $defaultPaths := list "/api/v1/write" "/prometheus/api/v1/write" "/write" "/api/v1/import" "/api/v1/import/.+" "/opentelemetry/.+" "/insert/.+"}}
   {{- $defaultUrlMapItem := dict "src_paths" $defaultPaths "url_prefix" $urls }}
   {{- $spec := deepCopy $auth.spec | default dict -}}
+  {{- $image := dict "tag" (include "vm.image.tag" $ctx) }}
+  {{- $_ := set $spec "image" $image -}}
+  {{- with (include "vm.license.global" $ctx) -}}
+    {{- $_ := set $spec "license" (fromYaml .) -}}
+  {{- end -}}
   {{- $accessSpec := $spec.unauthorizedUserAccessSpec | default dict }}
   {{- $urlMap := $accessSpec.url_map | default (list (default dict))  }}
   {{- $firstUrlMapItem := mergeOverwrite $defaultUrlMapItem (deepCopy (index $urlMap 0)) }}

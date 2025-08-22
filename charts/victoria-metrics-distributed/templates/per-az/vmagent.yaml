@@ -59,6 +59,11 @@ metadata:
 {{- if not $zone.vmagent.spec.nodeSelector }}
   {{- $_ := set $zone.vmagent.spec "nodeSelector" (dict "topology.kubernetes.io/zone" "{{ (.zone).name }}") }}
 {{- end }}
+{{- $image := dict "tag" (include "vm.image.tag" $ctx) }}
+{{- $_ := set $zone.vmagent.spec "image" $image }}
+{{- with (include "vm.license.global" $ctx) }}
+  {{- $_ := set $zone.vmagent.spec "license" (fromYaml .) }}
+{{- end }}
 spec: {{ tpl (toYaml $zone.vmagent.spec) $ctx | nindent 2 }}
 {{- end }}
 {{- end }}

@@ -25,6 +25,15 @@ Creates vmcluster spec map, insert zone's nodeselector and topologySpreadConstra
       {{- end -}}
     {{- end -}}
     {{- $clusterSpec = fromYaml (tpl (toYaml $clusterSpec) (dict "zone" $rolloutZone)) -}}
+    {{- $clusterSpec = mergeOverwrite (dict "clusterVersion" (printf "%s-cluster" (include "vm.image.tag" $ctx))) $clusterSpec -}}
+    {{- with (include "vm.license.global" $ctx) }}
+      {{- $_ := set $clusterSpec "license" (fromYaml .) }}
+    {{- end }}
+    {{- if ($clusterSpec.requestsLoadBalancer).enabled }}
+      {{- $balancerSpec := $clusterSpec.requestsLoadBalancer.spec | default dict }}
+      {{- $authImage := dict "image" (dict "tag" (include "vm.image.tag" $ctx)) }}
+      {{- $_ := set $clusterSpec.requestsLoadBalancer "spec" (mergeOverwrite $authImage $balancerSpec) }}
+    {{- end }}
     {{- if $rolloutZone.vmcluster.enabled -}}
       {{- $_ := set $zones $fullname $clusterSpec -}}
     {{- end -}}
@@ -54,6 +63,11 @@ Creates vmsingle spec map, insert zone's nodeselector and topologySpreadConstrai
       {{- $_ := set $singleSpec "nodeSelector" (dict "topology.kubernetes.io/zone" "{{ (.zone).name }}") }}
     {{- end }}
     {{- $singleSpec = fromYaml (tpl (toYaml $singleSpec) (dict "zone" $rolloutZone)) -}}
+    {{- $image := dict "tag" (include "vm.image.tag" $ctx) }}
+    {{- $singleSpec = mergeOverwrite (dict "image" $image) $singleSpec -}}
+    {{- with (include "vm.license.global" $ctx) }}
+      {{- $_ := set $singleSpec "license" (fromYaml .) }}
+    {{- end }}
     {{- if $rolloutZone.vmsingle.enabled -}}
       {{- $_ := set $zones $fullname $singleSpec -}}
     {{- end -}}

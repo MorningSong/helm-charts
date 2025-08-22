@@ -1,6 +1,6 @@
 ## Next release
 
-- TODO
+- Set default tag images for vm components from chart's app version
 
 ## 0.21.0
 
