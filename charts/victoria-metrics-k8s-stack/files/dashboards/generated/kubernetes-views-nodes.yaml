@@ -84,9 +84,9 @@ templating:
       uid: ${datasource}
     type: query
     query:
-      query: {{ printf "label_values(node_uname_info{nodename=~\"(?i:($node)(.[a-z0-9.]+)?)\",%s=~\"$cluster\"}, instance)" $clusterLabel }}
+      query: {{ printf "label_values(node_uname_info{nodename=~\"(?i:($node)(\\\\.[a-z0-9.-]+)?)\",%s=~\"$cluster\"}, instance)" $clusterLabel }}
       refId: StandardVariableQuery
-    definition: {{ printf "label_values(node_uname_info{nodename=~\"(?i:($node)(.[a-z0-9.]+)?)\",%s=~\"$cluster\"}, instance)" $clusterLabel }}
+    definition: {{ printf "label_values(node_uname_info{nodename=~\"(?i:($node)(\\\\.[a-z0-9.-]+)?)\",%s=~\"$cluster\"}, instance)" $clusterLabel }}
     hide: 2
     current: {}
     options: []
@@ -2947,5 +2947,5 @@ time:
   to: now
 timepicker: {}
 uid: k8s_views_nodes
-version: 38
+version: 39
 weekStart: ""
